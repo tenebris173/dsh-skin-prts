@@ -1,0 +1,10 @@
+# Bundle patch layer of dsh-skin-prts (api-notes §1.2 form).
+#
+# Row id doubles as the skin's settings namespace. 本皮肤的外观设置由皮肤自己
+# 持久化（localStorage，皮肤自治），因此这里不声明 config。
+#   row id       : dsh-skin-prts
+#   skin id      : skins.prts
+#   package name : dsh-skin-prts
+- insert:
+    - id: dsh-skin-prts
+      name: "dsh-skin-prts"

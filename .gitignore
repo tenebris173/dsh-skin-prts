@@ -1,0 +1,18 @@
+# 依赖 / 构建产物
+node_modules/
+dist/
+*.tgz
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+*.bak
+*.bak-*
+
+# 本地调试
+probe*.log
+.chrome-*/
+credentials.json
+.env
