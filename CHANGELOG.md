@@ -10,7 +10,7 @@
   - 自立模式 → 关掉自己（`enabled=false`），立即卸下、长期保持原生，随时可切回。
 - 统一接口补充 `isActive()` / `mode`。
 - 新增 `tests/console-wait.mjs`（18 项，含"控制台迟到不许误判"回归闸门）与
-  `tests/skin-selector.mjs`（4 项）并接入 CI；当前断言总数 **60 项**。
+  `tests/skin-selector.mjs`（9 项）并接入 CI；当前断言总数 **65 项**。
 
 ## 1.0.3
 
