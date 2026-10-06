@@ -29,6 +29,9 @@ jobs:
       - name: 皮肤集成测试（真实浏览器引擎跑真实 bundle）
         run: node tests/browser-smoke.mjs
 
+      - name: 自立模式测试（无控制台也必须可用）
+        run: node tests/standalone.mjs
+
       - name: 依赖自检（缺皮肤加载器时必须给出提示）
         run: node tests/dependency-check.mjs
 

@@ -12,6 +12,8 @@
  */
 import { apply } from '../lib/index.js'
 
+const NAME = 'PRTS'
+
 const WAIT = 4600
 let failures = 0
 const check = (name, ok, detail = '') => {
@@ -38,9 +40,10 @@ console.log('依赖自检（宿主半）')
   apply(ctx)
   await new Promise((r) => setTimeout(r, WAIT))
   const msg = warnings[0] || ''
-  check('缺服务时发出警告', warnings.length === 1, warnings.length + ' 条')
+  check('缺服务时发出提示', warnings.length === 1, warnings.length + ' 条')
   check('提示里点名了服务与参考实现', msg.includes('uiSkinLoader') && msg.includes('@dsh-eac/ui-skin-loader'), msg.slice(0, 80))
-  check('提示里给了下一步动作', msg.includes('设置 → 皮肤') || msg.includes('不会生效'), msg.slice(0, 80))
+  check('提示里说明会以自立模式运行', msg.includes('自立模式'), msg.slice(0, 90))
+  check('提示里指出在哪里调整', msg.includes('设置 → ' + NAME) || msg.includes('设置'), msg.slice(0, 90))
 }
 
 // 2) 有 uiSkinLoader → 应安静
