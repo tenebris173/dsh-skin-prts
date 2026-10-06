@@ -97,6 +97,17 @@ if ($stillRunning.Count -gt 0) {
   Warn ('DSH 正在运行（PID ' + (($stillRunning | ForEach-Object { $_.Id }) -join ', ') + '）—— 安装可以进行，但必须重启后皮肤才会加载。')
 }
 
+# ---------- 3.5 前置检查：皮肤加载器（缺了皮肤不会生效） ----------
+$LoaderPath = Join-Path $env:USERPROFILE ".dsh\profiles\$ProfileName\node_modules\@dsh-eac\ui-skin-loader"
+if (Test-Path $LoaderPath) {
+  Ok '皮肤加载器已安装（@dsh-eac/ui-skin-loader）'
+} else {
+  Warn '未检测到皮肤加载器 @dsh-eac/ui-skin-loader —— 本皮肤不会生效！'
+  Warn '  它提供「设置 → 皮肤」页面与皮肤登记服务（第三方插件，不随本包分发）。'
+  Warn '  请先安装加载器，再重启 DSH；装好后设置里会出现「皮肤」页面。'
+  Warn '  安装照旧继续，加载器补装后本皮肤即可正常使用。'
+}
+
 if ($DryRun) {
   Say ''
   Say '  -DryRun：不会写任何东西。实际会执行：'
