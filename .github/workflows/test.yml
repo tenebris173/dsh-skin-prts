@@ -1,0 +1,33 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  browser-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: 启动 headless Chrome（CDP 9222）
+        run: |
+          google-chrome --headless=new --disable-gpu --no-sandbox --hide-scrollbars \
+            --remote-debugging-port=9222 --user-data-dir=/tmp/cdp about:blank &
+          for i in $(seq 1 40); do
+            curl -sf http://127.0.0.1:9222/json/version >/dev/null && break
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:9222/json/version
+
+      - name: 皮肤集成测试（真实浏览器引擎跑真实 bundle）
+        run: node tests/browser-smoke.mjs
+
+      - name: 语法检查
+        run: node --check lib/client.js && node --check lib/index.js

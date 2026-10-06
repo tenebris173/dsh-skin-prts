@@ -1,4 +1,4 @@
-# 依赖 / 构建产物
+﻿# 依赖 / 构建产物
 node_modules/
 dist/
 *.tgz
@@ -16,3 +16,6 @@ probe*.log
 .chrome-*/
 credentials.json
 .env
+
+# 端到端扫测产物（截图可能含本机会话信息，勿提交）
+e2e-out/
