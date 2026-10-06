@@ -1,6 +1,6 @@
 {
   "name": "dsh-skin-prts",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "private": true,
   "type": "module",
   "main": "lib/index.js",
@@ -24,7 +24,7 @@
       "apiVersion": "dsh.ecosystem.ui-skin-loader/v1",
       "id": "skins.prts",
       "name": "PRTS",
-      "version": "1.0.7",
+      "version": "1.0.8",
       "author": "tenebris173",
       "description": "罗德岛终端风格：浅色纸面 / 作战终端两套底，直角切角、黑色发丝线、警示黄、四角登记标记与全屏细网格。",
       "tags": [

@@ -35,6 +35,9 @@ jobs:
       - name: 皮肤选择器测试
         run: node tests/skin-selector.mjs
 
+      - name: 对比度测试（每个强调色 × 每种底）
+        run: node tests/contrast.mjs
+
       - name: 依赖自检（缺皮肤加载器时必须给出提示）
         run: node tests/dependency-check.mjs
 

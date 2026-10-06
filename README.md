@@ -138,37 +138,12 @@ $cli = "$app\resources\app.asar\dsh\node_modules\@deepseek-ai\dsh-desktop-host\l
 | 脚本 | 覆盖 | 断言 |
 | --- | --- | --- |
 | `tests/browser-smoke.mjs` | 控制台路径：登记载荷 / 激活副作用 / **真实 CSS 层叠** / teardown | 32 |
-| `tests/console-wait.mjs` | **控制台迟到 1 秒（不许误判自立）** / 控制台始终不出现（自立 + 能回原生） | 18 |
+| `tests/console-wait.mjs` | 控制台迟到 1 秒（不许误判自立）/ 始终不出现（自立 + 能回原生） | 18 |
 | `tests/skin-selector.mjs` | 「皮肤」选择器：控制台模式走 switchTo / 自立模式走开关自己 | 9 |
+| `tests/contrast.mjs` | **每个强调色 × 每种底**：文字/标签对比度 ≥4.5:1，亮底派生深档 | 25 |
 | `tests/dependency-check.mjs` | 宿主半依赖自检 | 6 |
 
-合计 **65 项断言**。
-
-
-```powershell
-# 真实浏览器引擎里跑真实 bundle（需 Chrome 以 --remote-debugging-port=9222 启动）
-node tests/browser-smoke.mjs
-```
-
-32 项断言：登记载荷 → activate 副作用 → 装饰层 7 节点 → **两套底的真实 CSS 层叠**
-（`getComputedStyle` 读 token 与弹窗实色）→ 跟随应用主题切换 → 纹理 / 投影开关 → teardown 净场。
-
-### 端到端扫测（注入真实 DSH 页面）
-
-```bash
-# 1) 起一个 DSH 页面，记下打印的 URL
-dsh web --no-open --port 0
-# 2) 让 Chrome 开着 CDP
-google-chrome --headless=new --remote-debugging-port=9222 --user-data-dir=/tmp/cdp about:blank
-# 3) 跑
-node tests/e2e-sweep.mjs "<上面那个 URL>" e2e-out
-```
-
-把 bundle 注入**正在运行的 DSH 页面**实跑一轮：激活副作用 → 逐档切换（真实 `getComputedStyle` 读值）→
-CDP 模拟系统亮色 → 连切 10 次压力 → 真实设置弹窗 → `deactivate` 净场 → 二次激活 →
-全程采集 `Runtime.exceptionThrown` 与 `console.error/warning`。
-
-> 截图会存到 `e2e-out/`，**可能包含本机会话信息，不要外传**；`e2e-report.json` 里 URL 的 token 会自动打码。
+合计 **90 项断言**。
 
 ## 目录
 
