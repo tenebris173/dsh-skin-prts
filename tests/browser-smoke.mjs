@@ -68,7 +68,8 @@ const HARNESS2 = String.raw`
 (function () {
   var c = window.__calls;
   var ctx = {
-    effect: function (fn, label) { c.effects.push(label); var d = typeof fn === 'function' ? fn() : undefined; return function () { if (typeof d === 'function') d(); }; },
+    inject: function (deps, cb) { try { cb({ uiSkinLoader: this.uiSkinLoader }); } catch (e) { c.injectError = String(e && e.message || e); } return function () {}; },
+				effect: function (fn, label) { c.effects.push(label); var d = typeof fn === 'function' ? fn() : undefined; return function () { if (typeof d === 'function') d(); }; },
     theme: {
       getTheme: function () { return { preference: window.__pref }; },
       register: function (def) { c.themeRegisters.push({ id: def.id, scheme: def.colorScheme, tokens: Object.keys(def.tokens).length }); return function () { c.themeDisposed++; }; },
@@ -172,7 +173,7 @@ const check = (name, cond, extra = '') => {
 }
 
 console.log('皮肤登记')
-check('导出 inject 服务清单', Array.isArray(r.inject) && r.inject.length === 4, JSON.stringify(r.inject))
+check('inject 只依赖宿主基础服务、不再静态等待控制台', Array.isArray(r.inject) && r.inject.length === 3 && r.inject.indexOf('uiSkinLoader') < 0 && r.inject.indexOf('theme') >= 0, JSON.stringify(r.inject))
 check('apiVersion / id / name 正确', r.registered.apiVersion === 'dsh.ecosystem.ui-skin-loader/v1' && r.registered.id === 'skins.prts' && r.registered.name === 'PRTS')
 check('带内联 SVG 预览', r.registered.preview === 'string')
 

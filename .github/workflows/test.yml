@@ -29,6 +29,12 @@ jobs:
       - name: 皮肤集成测试（真实浏览器引擎跑真实 bundle）
         run: node tests/browser-smoke.mjs
 
+      - name: 控制台等待 / 自立模式测试
+        run: node tests/console-wait.mjs
+
+      - name: 皮肤选择器测试
+        run: node tests/skin-selector.mjs
+
       - name: 依赖自检（缺皮肤加载器时必须给出提示）
         run: node tests/dependency-check.mjs
 
