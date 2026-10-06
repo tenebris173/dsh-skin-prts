@@ -11,37 +11,24 @@
 
 ![外观矩阵](preview/prts-matrix.png)
 
-## 运行模式：有控制台 / 没控制台都能用
+## ⚠️ 前置要求：皮肤加载器（第三方插件）
 
-本皮肤**不依赖任何第三方控制台**，自己就能跑：
+本皮肤是**纯观感包**：它通过 Cordis 的 `inject` 等待宿主里提供 `uiSkinLoader` 服务的
+**皮肤加载器**，由加载器在激活时下发 SkinContext。也就是说：
 
-| 场景 | 行为 |
+| 场景 | 结果 |
 | --- | --- |
-| **没装皮肤控制台**（默认） | **自立模式**：装完重启即自动应用外观；在「设置 → PRTS」里可以开关、调全部选项（关掉立刻恢复原生界面，随时再打开） |
-| 装了皮肤控制台（参考实现 `@dsh-eac/ui-skin-loader`） | 自动登记托管：出现在 **设置 → 皮肤** 卡片墙里，由控制台负责互斥切换 / 持久化 / 故障隔离 |
+| 已装加载器（参考实现 `@dsh-eac/ui-skin-loader` ≥ 1.2.0） | 正常：**设置 → 皮肤** 里出现本皮肤，一键切换 |
+| **没装加载器** | ⚠️ 皮肤**不会生效**，但**也不会报错**——插件会安静挂起等这个服务。设置里也不会出现「皮肤」页面（那页面本身就属于加载器）。 |
 
-两种模式共用同一套 token 与设置存储，**切换控制台不需要改皮肤**。
+所以顺序是：**先装加载器 → 再装本皮肤 → 重启 DSH**。
 
-### 对控制台 / 脚本的接口
+装好后宿主半会做一次依赖自检（延迟 4 秒，等加载器注册服务完成）；若仍未检测到
+`uiSkinLoader`，会在日志里给出一条明确提示，而不是让你对着一个没反应的界面猜。
 
-皮肤实现了公约 `dsh.ecosystem.ui-skin-loader/v1` 的 `registerSkin()`；此外无论哪种模式，
-都暴露一个统一入口供控制台或脚本驱动：
-
-```js
-window.__dshSkins["skins.prts"]
-// {
-//   mode: "standalone" | "console",   // 当前运行模式
-//   skinId, version,
-//   isActive(),                      // 是否正在生效
-//   activate(), deactivate(),        // 手动开关（自立模式下 activate 会接管 owner）
-//   getSettings(), setSettings(patch) // 读写外观设置
-// }
-```
-
-自立模式下多款皮肤共存时用 `localStorage["dsh.skin.standalone.owner.v1"]` 协商归属：
-先启动的占位，后启动的让位（设置面板里给「改用本皮肤」按钮，点击后刷新即接管）。
-
-> 控制台是**可选**的第三方插件，不随本包分发。想要卡片墙式管理再装它即可。
+> 加载器是第三方插件、不随本包分发。用它的发布渠道拿到 tarball 后：
+> `dsh plugin --profile desktop add <loader.tgz>`。
+> 本仓库的安装脚本也会在装载前做一次预检并提示。
 
 
 ## 这是一个 DSH 插件
@@ -61,8 +48,6 @@ window.__dshSkins["skins.prts"]
 | 本地源码 | 见下方「安装 → B. 从源码装」 |
 
 > 装完**必须重启 DSH**（插件包只在启动时进启动图），随后在 **设置 → 皮肤** 里一键切换。
-
-> 配套的另一款：**深渊 ABYSSAL（深海玻璃拟态）** · <https://github.com/tenebris173/dsh-skin-abyssal>
 
 ## 外观
 
@@ -140,13 +125,6 @@ $cli = "$app\resources\app.asar\dsh\node_modules\@deepseek-ai\dsh-desktop-host\l
 - **设置面板**：经 `settings.section` 席位注册 React 组件，只在皮肤激活时出现。
 
 ## 自测
-
-| 脚本 | 覆盖 | 断言 |
-| --- | --- | --- |
-| `tests/browser-smoke.mjs` | 控制台路径：登记载荷 / 激活副作用 / **真实 CSS 层叠** / 改档重算 / teardown 净场 | 32 |
-| `tests/standalone.mjs` | **无控制台**：自动生效 / 统一接口 `window.__dshSkins` / 开关能卸能装 / 多皮肤让位 / 卸载全清 | 15 |
-| `tests/dependency-check.mjs` | 宿主半依赖自检（缺服务时的提示） | 7 |
-| `tests/restore-native.mjs` | **还原原生皮肤**：自立模式关开关 / 控制台模式请它 `switchTo("default")` | 17 |
 
 ```powershell
 # 真实浏览器引擎里跑真实 bundle（需 Chrome 以 --remote-debugging-port=9222 启动）

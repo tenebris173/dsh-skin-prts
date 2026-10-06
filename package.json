@@ -1,6 +1,6 @@
 {
   "name": "dsh-skin-prts",
-  "version": "1.0.5",
+  "version": "1.0.3",
   "private": true,
   "type": "module",
   "main": "lib/index.js",
@@ -24,7 +24,7 @@
       "apiVersion": "dsh.ecosystem.ui-skin-loader/v1",
       "id": "skins.prts",
       "name": "PRTS",
-      "version": "1.0.5",
+      "version": "1.0.3",
       "author": "tenebris173",
       "description": "罗德岛终端风格：浅色纸面 / 作战终端两套底，直角切角、黑色发丝线、警示黄、四角登记标记与全屏细网格。",
       "tags": [
@@ -38,12 +38,10 @@
       ],
       "preview": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 320 180\" role=\"img\" aria-label=\"PRTS\"><rect width=\"320\" height=\"180\" fill=\"#f4f5f7\"/><rect x=\"0\" y=\"0\" width=\"320\" height=\"18\" fill=\"#111417\"/><rect x=\"0\" y=\"0\" width=\"42\" height=\"18\" fill=\"#ffd100\"/><text x=\"21\" y=\"13\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"9\" font-weight=\"700\" letter-spacing=\".18em\" fill=\"#111417\">PRTS</text><rect x=\"8\" y=\"26\" width=\"92\" height=\"128\" fill=\"#ffffff\" stroke=\"#111417\" stroke-width=\"1.2\"/><rect x=\"8\" y=\"26\" width=\"92\" height=\"14\" fill=\"#111417\"/><rect x=\"16\" y=\"50\" width=\"60\" height=\"3\" fill=\"#8b939d\"/><rect x=\"16\" y=\"60\" width=\"72\" height=\"3\" fill=\"#8b939d\"/><rect x=\"16\" y=\"94\" width=\"76\" height=\"12\" fill=\"#111417\"/><rect x=\"16\" y=\"112\" width=\"76\" height=\"12\" fill=\"#ffffff\" stroke=\"#111417\"/><rect x=\"16\" y=\"112\" width=\"3\" height=\"12\" fill=\"#ffd100\"/><rect x=\"110\" y=\"26\" width=\"202\" height=\"70\" fill=\"#ffffff\" stroke=\"#111417\" stroke-width=\"1.2\"/><rect x=\"110\" y=\"26\" width=\"202\" height=\"14\" fill=\"#111417\"/><rect x=\"120\" y=\"50\" width=\"180\" height=\"3\" fill=\"#525a64\"/><rect x=\"120\" y=\"58\" width=\"150\" height=\"3\" fill=\"#525a64\"/><rect x=\"196\" y=\"84\" width=\"108\" height=\"12\" fill=\"#ffd100\" stroke=\"#111417\"/><rect x=\"110\" y=\"104\" width=\"202\" height=\"50\" fill=\"#ffffff\" stroke=\"#111417\" stroke-width=\"1.2\"/><rect x=\"110\" y=\"104\" width=\"3\" height=\"50\" fill=\"#111417\"/><text x=\"160\" y=\"174\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"9\" letter-spacing=\".26em\" fill=\"#8b939d\">RHODES ISLAND TERMINAL</text></svg>",
       "requires": {
-        "optional": true,
         "service": "uiSkinLoader",
         "reference": "@dsh-eac/ui-skin-loader >= 1.2.0",
-        "note": "可选。装了则由控制台托管（卡片墙 / 互斥切换 / 持久化）；没装则皮肤自立运行，设置里同样可开关与调节。"
-      },
-      "standalone": true
+        "note": "本皮肤只提供观感；皮肤发现 / 切换 / 持久化 / 「设置 → 皮肤」页面都由加载器提供。缺少该服务时皮肤会静默挂起（不报错也无效果），宿主半会在启动后给出提示。"
+      }
     },
     "bundle": {
       "patch": "./cordis.patch.yml"
