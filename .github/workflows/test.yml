@@ -32,6 +32,9 @@ jobs:
       - name: 自立模式测试（无控制台也必须可用）
         run: node tests/standalone.mjs
 
+      - name: 还原原生皮肤测试（两种模式）
+        run: node tests/restore-native.mjs
+
       - name: 依赖自检（缺皮肤加载器时必须给出提示）
         run: node tests/dependency-check.mjs
 

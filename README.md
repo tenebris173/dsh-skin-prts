@@ -146,6 +146,7 @@ $cli = "$app\resources\app.asar\dsh\node_modules\@deepseek-ai\dsh-desktop-host\l
 | `tests/browser-smoke.mjs` | 控制台路径：登记载荷 / 激活副作用 / **真实 CSS 层叠** / 改档重算 / teardown 净场 | 32 |
 | `tests/standalone.mjs` | **无控制台**：自动生效 / 统一接口 `window.__dshSkins` / 开关能卸能装 / 多皮肤让位 / 卸载全清 | 15 |
 | `tests/dependency-check.mjs` | 宿主半依赖自检（缺服务时的提示） | 7 |
+| `tests/restore-native.mjs` | **还原原生皮肤**：自立模式关开关 / 控制台模式请它 `switchTo("default")` | 17 |
 
 ```powershell
 # 真实浏览器引擎里跑真实 bundle（需 Chrome 以 --remote-debugging-port=9222 启动）
