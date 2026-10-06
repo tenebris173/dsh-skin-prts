@@ -110,7 +110,7 @@ $cli = "$app\resources\app.asar\dsh\node_modules\@deepseek-ai\dsh-desktop-host\l
 node tests/browser-smoke.mjs
 ```
 
-30 项断言：登记载荷 → activate 副作用 → 装饰层 7 节点 → **两套底的真实 CSS 层叠**
+32 项断言：登记载荷 → activate 副作用 → 装饰层 7 节点 → **两套底的真实 CSS 层叠**
 （`getComputedStyle` 读 token 与弹窗实色）→ 跟随应用主题切换 → 纹理 / 投影开关 → teardown 净场。
 
 ## 目录
