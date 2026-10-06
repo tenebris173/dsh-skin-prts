@@ -1,5 +1,12 @@
 # 更新记录
 
+## 1.0.2
+
+- **修：宿主重写亮暗开关时的兜底**。PRTS 此前只在自己 `apply()` 时驱动
+  `body[data-ds-dark-theme]`；若宿主（跟随系统 / 手动切亮暗）自行改写它，档位就会与皮肤不一致。
+  现在用 `MutationObserver` 按当前有效底复位，teardown 时断开。
+- 新增端到端扫测（CDP 模拟 `prefers-color-scheme: light`、真实设置弹窗、连切压力、二次激活），23 项全过。
+
 ## 1.0.1
 
 - **命名空间去个人化**：包名统一为 `dsh-skin-prts`，皮肤 id 统一为 `skins.prts`，
