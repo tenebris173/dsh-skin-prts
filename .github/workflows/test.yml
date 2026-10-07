@@ -29,6 +29,9 @@ jobs:
       - name: 皮肤集成测试（真实浏览器引擎跑真实 bundle）
         run: node tests/browser-smoke.mjs
 
+      - name: 多皮肤亮暗开关冲突（同时 standalone）
+        run: node tests/scheme-conflict.mjs
+
       - name: 控制台等待 / 自立模式测试
         run: node tests/console-wait.mjs
 
