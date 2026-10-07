@@ -1,5 +1,24 @@
 # 更新记录
 
+## 1.0.10
+
+- **新增皮肤自带的「自立协调器」**：装不到 `@dsh-eac/ui-skin-loader` 时不再各自 standalone 生效
+  （那会所有面板都在、所有观感叠加），改由一个轻量协调器统一管理。
+- 协调器实现与皮肤控制台同形的 5 个方法（`registerSkin` / `list` / `current` / `switchTo` / `subscribe`），
+  所以「皮肤」选择器、激活/停用、面板显隐全部复用既有代码 —— 一行 UI 都没改。
+- 行为：同一时刻只激活一款皮肤；当前生效那款的面板里可直接切到另一款或「原生（默认观感）」；
+  设置页另有一个常驻的「皮肤」小节，避免选中原生后没有面板可切回来；选择持久化
+  （`dsh.skin.standalone.v1`），重启后按上次选择恢复。
+- **只在自己的一套键下工作**，不占用加载器保留面：`window.__dshSkinStandaloneV1` / 设置键
+  `dsh.skin.standalone.v1` / 槽位 `skin-standalone-selector` / locale `skn-standalone`
+  （未用 `usl-`、`dsh-ui-skin-loader`、`io.github.dsh-eac.skin.loader.*`）。
+- 装了真加载器时**绝不介入**（`uiSkinLoader` 在宽限窗口内出现就走控制台路径）；真加载器后到会整体让位。
+- 暴露的皮肤模式新增 `coordinated`（= 协调器托管），与 `console` / `standalone` 区分，便于观测。
+- 新增 `tests/standalone-coordinator.mjs`（15 项断言）：无加载器时单例激活 / 切换互斥 / 回原生 /
+  持久化恢复 / 有加载器时不介入。CI 走内建对端，不依赖同级仓库。
+- 仲裁器保留为安全网：对"未接入协议的第三方"仍保证写入有界（`tests/scheme-conflict.mjs` 已改为专测该场景）。
+
+
 ## 1.0.9
 
 - **修掉"没装加载器 + 装了多个皮肤"时的致命互写**：本皮肤（纸面档要"没有" `data-ds-dark-theme`）

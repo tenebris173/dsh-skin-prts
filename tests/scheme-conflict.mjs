@@ -68,21 +68,9 @@ window.__ModuleLoader__.load({
 });
 `
 
-const PEER_MODE = process.env.PEER ?? 'auto' // auto | real | simulated
-const defaultPeer = path.join(here, '..', '..', process.env.PEER_REPO ?? 'dsh-abyssal-eac', 'lib', 'client.js')
-let peerBundle
-let peerKind
-if (PEER_MODE === 'simulated') {
-  peerBundle = SIMULATED_PEER
-  peerKind = 'simulated'
-} else {
-  const candidate = process.env.OTHER_SKIN_BUNDLE || defaultPeer
-  let text = null
-  try { text = readFileSync(candidate, 'utf8') } catch { text = null }
-  if (text) { peerBundle = text; peerKind = 'real' }
-  else if (PEER_MODE === 'real') { console.error('FAIL: 找不到对端 bundle: ' + candidate); process.exit(1) }
-  else { peerBundle = SIMULATED_PEER; peerKind = 'simulated' }
-}
+// 本测试专测"仲裁器 vs 未接入协议的第三方"（真实皮肤组合见 standalone-coordinator.mjs）
+const peerBundle = SIMULATED_PEER
+const peerKind = 'simulated'
 
 // 本测试在两个仓库各有一份：self 是所在仓库的皮肤，peer 是另一个（或内建）。
 // 所有权应归"优先级更高且在页面里"的那个：ABYSSAL 100 > PRTS 50。
@@ -198,6 +186,7 @@ try {
       prtsMode: document.documentElement.getAttribute('data-skn-prts-mode'),
       modes: Object.keys(skins).map(function (k) { return k + '=' + skins[k].mode; }),
       skinIds: Object.keys(skins),
+      actives: Object.keys(skins).filter(function (k) { return skins[k] && typeof skins[k].isActive === 'function' && skins[k].isActive(); }),
       logs: logs,
     };
   })()`, 12000)
@@ -209,23 +198,14 @@ try {
   } else if (phase1?.__exception || phase1?.fatal) {
     check('测试脚本执行', false, phase1.__exception || phase1.fatal)
   } else {
-    const bothStandalone = phase1.modes.length === 2 && phase1.modes.every((m) => m.endsWith('=standalone'))
-    check('两个皮肤都进入 standalone（构造出危险配置）', bothStandalone, phase1.modes.join(', '))
+    // 本皮肤经自立协调器生效（恰好一款），第三方不接入协议、直接抢属性 → 由仲裁器兜住
+    check('本皮肤经协调器生效（不是各自为政）',
+      Array.isArray(phase1.actives) && phase1.actives.length === 1 && phase1.actives[0] === SELF_ID, JSON.stringify(phase1.actives))
     check('事件循环仍然存活（测试跑完了）', true)
-    if (prtsInPage) {
-      check('PRTS 处于与对手相反的档位（冲突成立）',
-        phase1.prtsMode === prtsAppearance, 'prtsMode=' + phase1.prtsMode + ' expected=' + prtsAppearance)
-    }
-    if (peerKind === 'real') {
-      check('2 秒内 body[data-ds-dark-theme] 改写次数有界（≤ 5）',
-        typeof phase1.mutationCount === 'number' && phase1.mutationCount <= 5, String(phase1.mutationCount))
-    } else {
-      check('未接入协议的第三方反复改写时，写入次数被熔断压住（≤ 60）',
-        typeof phase1.mutationCount === 'number' && phase1.mutationCount <= 60, String(phase1.mutationCount))
-      check('写入熔断已触发', phase1.suspended === true, String(phase1.suspended))
-    }
-    check('仲裁器只有一个持有者，且归优先级更高的那个',
-      phase1.owner === expectedOwner, 'owner=' + phase1.owner + ' expected=' + expectedOwner)
+    check('未接入协议的第三方反复改写时，写入次数被熔断压住（≤ 60）',
+      typeof phase1.mutationCount === 'number' && phase1.mutationCount <= 60, String(phase1.mutationCount))
+    check('写入熔断已触发', phase1.suspended === true, String(phase1.suspended))
+    check('仲裁器只有一个持有者，且归本皮肤', phase1.owner === SELF_ID, 'owner=' + phase1.owner + ' expected=' + SELF_ID)
     if (peerKind === 'real') {
       check('属性最终值 = 持有者的期望值', phase1.attr === true, 'owner=' + phase1.owner + ' attr=' + phase1.attr)
     } else {

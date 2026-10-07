@@ -32,6 +32,9 @@ jobs:
       - name: 多皮肤亮暗开关冲突（同时 standalone）
         run: node tests/scheme-conflict.mjs
 
+      - name: 自立协调器（无加载器时的单例激活 / 切换）
+        run: node tests/standalone-coordinator.mjs
+
       - name: 控制台等待 / 自立模式测试
         run: node tests/console-wait.mjs
 

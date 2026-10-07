@@ -107,6 +107,7 @@ const STATE = [
   '    mode: api ? api.mode : null,',
   '    active: api ? api.isActive() : null,',
   '    enabled: enabled,',
+  '    standaloneStored: (function () { try { return localStorage.getItem("dsh.skin.standalone.v1"); } catch (e) { return "err"; } })(),',
   '    registered: window.__registered,',
   '    injectCalls: window.__injectCallbacks.length,',
   '    injectDeps: window.__injectCallbacks[0] ? window.__injectCallbacks[0].deps : null,',
@@ -178,7 +179,7 @@ const b0 = JSON.parse(await evaluate(STATE))
 check('宽限期内先不动作', b0.styleNodes === 0, b0.styleNodes)
 await wait(3400)
 const b1 = JSON.parse(await evaluate(STATE))
-check('超时后进入自立模式', b1.mode === 'standalone', String(b1.mode))
+check('超时后进入自立协调器（装不到加载器时的轻量替代）', b1.mode === 'coordinated', String(b1.mode))
 check('自立模式自动应用外观', b1.styleNodes === 1 && b1.attr === '', JSON.stringify({ nodes: b1.styleNodes, attr: b1.attr }))
 check('自立模式面板常驻（可切回原生）', b1.hasSection === true, String(b1.hasSection))
 
@@ -191,7 +192,7 @@ await wait(400)
 const b2 = JSON.parse(await evaluate(STATE))
 check('选「原生」未抛错', restored === 'ok', restored)
 check('选「原生」后立即还原默认皮肤', b2.styleNodes === 0 && b2.attr === null, JSON.stringify({ nodes: b2.styleNodes, attr: b2.attr }))
-check('并记住选择（enabled=false，重启仍原生）', b2.enabled === false, String(b2.enabled))
+check('并记住选择（协调器持久化为 default，重启仍原生）', b2.standaloneStored === 'default', String(b2.standaloneStored))
 
 console.log(failures === 0 ? '\n全部通过' : '\n' + failures + ' 项失败')
 await send('Target.closeTarget', { targetId: target.id }).catch(() => {})
