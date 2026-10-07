@@ -41,6 +41,17 @@ const evaluate = async (expression) => {
   return res.result?.result?.value
 }
 const wait = (ms) => new Promise((r) => setTimeout(r, ms))
+// 轮询等待：定时器与事件循环在 CI 上会抖，固定 sleep 容易 flaky（这个测试就踩过）
+const waitFor = async (pred, ms = 8000) => {
+  const t0 = Date.now()
+  let last = JSON.parse(await evaluate(STATE))
+  while (Date.now() - t0 < ms) {
+    if (pred(last)) return last
+    await wait(150)
+    last = JSON.parse(await evaluate(STATE))
+  }
+  return last
+}
 
 let failures = 0
 const check = (name, ok, detail = '') => {
