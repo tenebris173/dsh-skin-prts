@@ -118,6 +118,7 @@ const HARNESS2 = String.raw`
     cssLen: (document.querySelector('style[data-skn-prts-style]') || {}).textContent ? document.querySelector('style[data-skn-prts-style]').textContent.length : 0,
     chrome: !!document.querySelector('[data-skn-prts-chrome]'),
     chromeParts: document.querySelectorAll('[data-skn-prts-chrome] > *').length,
+    hasEdgeCss: (((document.querySelector('style[data-skn-prts-style]') || {}).textContent || '').indexOf('-edge{') >= 0),
     themeRegisters: c.themeRegisters.slice(),
     overrides: c.overrides, tokens: c.lastTokens, source: c.lastSource,
     section: c.section, locale: c.locale, effects: c.effects.length,
@@ -180,7 +181,7 @@ check('带内联 SVG 预览', r.registered.preview === 'string')
 console.log('激活副作用')
 check('body 打上皮肤标记', r.afterActivate.bodyAttr === '')
 check('注入自有 style 节点', r.afterActivate.styleNode && r.afterActivate.cssLen > 5000, 'len=' + r.afterActivate.cssLen)
-check('注入装饰层（网格/扫描线/边缘/四角 = 7 个节点）', r.afterActivate.chrome && r.afterActivate.chromeParts === 7, 'parts=' + r.afterActivate.chromeParts)
+check('注入装饰层（网格/扫描线/四角 = 6 个节点）', r.afterActivate.chrome && r.afterActivate.chromeParts === 6, 'parts=' + r.afterActivate.chromeParts)
 check('token 覆盖 100+ 项', r.afterActivate.overrides === 1 && r.afterActivate.tokens > 100, 'tokens=' + r.afterActivate.tokens)
 check('覆盖层 source = 皮肤 id', r.afterActivate.source === 'skins.prts')
 check('注册 settings.section 席位', r.afterActivate.section?.id === 'skn-prts-settings')
@@ -208,7 +209,7 @@ check('圆角切到工作台（6/8px）', r.terminalCyan.radiusMd === '6px' && r
 
 console.log('纹路与投影开关')
 check('关纹理后不再输出网格/扫描线', r.textureOff.hasGrid === false && r.textureOff.hasScan === false, JSON.stringify(r.textureOff))
-check('装饰层仍在（四角/边缘保留）', r.textureOff.chrome === true && r.textureOff.hasEdge === true)
+check('左侧警示条已移除（CSS 与 DOM 都不再有 edge）', r.afterActivate.hasEdgeCss === false && r.afterActivate.chromeHasEdge !== true, 'css=' + r.afterActivate.hasEdgeCss)
 check('硬投影仍开启', r.textureOff.hasLift === true)
 
 console.log('teardown 净场')
